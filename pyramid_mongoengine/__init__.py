@@ -30,7 +30,7 @@ from mongoengine.queryset import (
 
 from pyramid.httpexceptions import exception_response
 from pyramid.renderers import JSON
-
+from os import getenv
 from .utils import new_adapters
 
 
@@ -56,6 +56,13 @@ def _connect_database(config):
 
     if settings.get("mongodb_name"):
         mongodb_name = settings["mongodb_name"]
+
+    # Allow Environment settings to override the config file
+    if getenv("MONGO_URI"):
+        mongo_uri = getenv("MONGO_URI")
+
+    if getenv("MONGODB_NAME"):
+        mongodb_name = getenv("MONGODB_NAME")
 
     return mongoengine.connect(mongodb_name, host=mongo_uri)
 
